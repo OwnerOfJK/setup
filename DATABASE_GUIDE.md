@@ -182,4 +182,6 @@ Direct Driver + Query Builder
 4. **Consider team skills**: ORMs help teams with varying SQL expertise
 5. **Performance vs productivity**: Direct drivers fastest, ORMs most productive
 
-Your current approach of using direct pg for database scripts and Knex for application logic hits the sweet spot for most production applications!
+## More sources
+
+Find info about pg npm package: https://node-postgres.com
