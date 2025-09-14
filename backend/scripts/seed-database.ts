@@ -57,26 +57,28 @@ async function seedUsers (connection: Client) {
   const rolesAccumulator: number[] = []
 
   for (const user of users) {
-    const [userResult] = await connection.execute(`
+    const userResult = await connection.query(`
       INSERT INTO users (username, email, password)
-      VALUES (?, ?, ?)
+      VALUES ($1, $2, $3)
+      RETURNING id
     `, [user.username, user.email, hash])
 
-    const userId = (userResult as any).rows[0].id
+    const userId = userResult.rows[0].id
 
-    const [roleResult] = await connection.execute(`
+    const roleResult = await connection.query(`
       INSERT INTO roles (name)
-      VALUES (?)
+      VALUES ($1)
+      RETURNING id
     `, [user.username])
 
-    const newRoleId = (roleResult as any).rows[0].id
+    const newRoleId = roleResult.rows[0].id
 
     rolesAccumulator.push(newRoleId)
 
     for (const roleId of rolesAccumulator) {
-      await connection.execute(`
+      await connection.query(`
         INSERT INTO user_roles (user_id, role_id)
-        VALUES (?, ?)
+        VALUES ($1, $2)
       `, [userId, roleId])
     }
   }
