@@ -39,7 +39,7 @@ const schema = {
     },
     POSTGRES_PORT: {
       type: 'number',
-      default: 3306
+      default: 5432
     },
     POSTGRES_USER: {
       type: 'string'
@@ -90,12 +90,12 @@ export const autoConfig = {
   schema,
 
   // Needed to read .env in root folder
-  dotenv: true,
+  // dotenv: true,
   // or, pass config options available on dotenv module
-  // dotenv: {
-  //   path: `${import.meta.dirname}/.env`,
-  //   debug: true
-  // }
+  dotenv: {
+    path: `app/.env`,
+    debug: true
+  }
 
   // Source for the configuration data
   // Optional, default: process.env
