@@ -14,6 +14,23 @@ services:
       retries: 3
     volumes:
       - db_data:/var/lib/postgresql/data
+      
+  backend:
+    build: ./backend
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - COOKIE_SECRET=${COOKIE_SECRET}
+      - COOKIE_NAME=${COOKIE_NAME}
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX}
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:
