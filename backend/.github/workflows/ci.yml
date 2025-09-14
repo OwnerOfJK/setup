@@ -28,17 +28,17 @@ jobs:
         node-version: [20, 22, 24]
 
     services:
-      mysql:
-        image: mysql:8.4
+      db:
+        image: postgres:16
         ports:
-          - 3306:3306
+          - 5432:5432
         env:
           POSTGRES_ROOT_PASSWORD: root_password
           POSTGRES_DATABASE: test_db
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
         options: >-
-          --health-cmd="mysqladmin ping -u$POSTGRES_USER -p$POSTGRES_PASSWORD"
+          --health-cmd="pg_isready -U$POSTGRES_USER -d$POSTGRES_DATABASE"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
