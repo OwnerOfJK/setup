@@ -90,12 +90,12 @@ export const autoConfig = {
   schema,
 
   // Needed to read .env in root folder
-  // dotenv: true,
+  dotenv: true,
   // or, pass config options available on dotenv module
-  dotenv: {
-    path: `app/.env`,
-    debug: true
-  }
+  // dotenv: {
+  //   path: 'app/.env',
+  //   debug: true
+  // },
 
   // Source for the configuration data
   // Optional, default: process.env
