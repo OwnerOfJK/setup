@@ -14,13 +14,13 @@
     "dev:start": "npm run build && fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js",
     "test": "npm run db:seed && c8 npm run test:run",
     "test:run": "glob -c \"tsx --test\" \"./test/**/*.ts\"",
-    "standalone": "npm run build && node --env-file=.env dist/server.js",
+    "standalone": "npm run build && node dist/server.js",
     "lint": "eslint --ignore-pattern=dist",
     "lint:fix": "npm run lint -- --fix",
-    "db:create": "tsx --env-file=.env ./scripts/create-database.ts",
-    "db:drop": "tsx --env-file=.env ./scripts/drop-database.ts",
-    "db:migrate": "tsx --env-file=.env ./scripts/migrate.ts",
-    "db:seed": "tsx --env-file=.env ./scripts/seed-database.ts"
+    "db:create": "tsx ./scripts/create-database.ts",
+    "db:drop": "tsx ./scripts/drop-database.ts",
+    "db:migrate": "tsx ./scripts/migrate.ts",
+    "db:seed": "tsx ./scripts/seed-database.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^6.3.1",
