@@ -14,7 +14,6 @@ declare module 'fastify' {
       COOKIE_SECURED: boolean;
       RATE_LIMIT_MAX: number;
       UPLOAD_DIRNAME: string;
-      UPLOAD_TASKS_DIRNAME: string;
     };
   }
 }
@@ -74,10 +73,6 @@ const schema = {
       pattern: '^(?!.*\\.{2}).*$',
       default: 'uploads'
     },
-    UPLOAD_TASKS_DIRNAME: {
-      type: 'string',
-      default: 'tasks'
-    }
   }
 }
 
