@@ -1,4 +1,4 @@
-import { Client, ClientBase } from 'pg'
+import { Client } from 'pg'
 import { QueryResult } from 'pg'
 import path from 'node:path'
 import fs from 'node:fs'
