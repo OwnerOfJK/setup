@@ -1,5 +1,5 @@
 {
-  "name": "fastify-demo",
+  "name": "backend",
   "version": "0.0.0",
   "main": "app.js",
   "type": "module",
@@ -16,11 +16,7 @@
     "test:run": "glob -c \"tsx --test\" \"./test/**/*.ts\"",
     "standalone": "npm run build && node dist/server.js",
     "lint": "eslint --ignore-pattern=dist",
-    "lint:fix": "npm run lint -- --fix",
-    "db:create": "tsx ./scripts/create-database.ts",
-    "db:drop": "tsx ./scripts/drop-database.ts",
-    "db:migrate": "tsx ./scripts/migrate.ts",
-    "db:seed": "tsx ./scripts/seed-database.ts"
+    "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
     "@fastify/autoload": "^6.3.1",
