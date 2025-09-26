@@ -6,6 +6,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DATABASE}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      CAN_CREATE_DATABASE: ${CAN_CREATE_DATABASE}
+      CAN_DROP_DATABASE: ${CAN_DROP_DATABASE}
+      CAN_SEED_DATABASE: ${CAN_SEED_DATABASE}
     ports:
       - 5432:5432
     healthcheck:
@@ -21,18 +26,29 @@ services:
     build: ./backend
     restart: unless-stopped
     environment:
+      NODE_ENV: ${NODE_ENV}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      COOKIE_NAME: ${COOKIE_NAME}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX}
+    ports:
+      - "3002:3002"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    environment:
       - NODE_ENV=${NODE_ENV}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - COOKIE_SECRET=${COOKIE_SECRET}
       - COOKIE_NAME=${COOKIE_NAME}
       - RATE_LIMIT_MAX=${RATE_LIMIT_MAX}
-      - CAN_CREATE_DATABASE=${CAN_CREATE_DATABASE}
-      - CAN_DROP_DATABASE=${CAN_DROP_DATABASE}
-      - CAN_SEED_DATABASE=${CAN_SEED_DATABASE}
     ports:
       - "3000:3000"
     depends_on:
