@@ -20,6 +20,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run start` - Start production server
 - `npm run standalone` - Run as standalone executable (bypasses fastify-cli)
 
+### Frontend Development (cd frontend/)
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run typecheck` - Run TypeScript type checking
+
 ### Database Operations (cd db/)
 - `npm run db:create` - Create database (requires CAN_CREATE_DATABASE=1)
 - `npm run db:drop` - Drop database (requires CAN_DROP_DATABASE=1)
@@ -32,7 +38,7 @@ This is a full-stack application with Fastify backend, React frontend, and Postg
 
 ### Core Structure
 - **`backend/`** - Node.js/Fastify API server with TypeScript
-- **`frontend/`** - React frontend with TypeScript (container exists but not implemented)
+- **`frontend/`** - React frontend with TypeScript using React Router v7
 - **`db/`** - Database scripts and migrations
 - **`docker-compose.yml`** - Orchestrates all services
 
@@ -43,6 +49,13 @@ This is a full-stack application with Fastify backend, React frontend, and Postg
 - **`src/plugins/app/`** - Application-specific plugins (repositories, file managers, auth)
 - **`src/routes/`** - API endpoints organized by feature (users, tasks, auth)
 - **`src/schemas/`** - TypeBox schemas for request/response validation
+
+### Frontend Architecture (frontend/)
+- **React Router v7** with TypeScript
+- **Vite** for build tooling
+- **Tailwind CSS** for styling
+- Multi-stage Docker build with separate development and production dependencies
+- Builds to `build/` directory with server-side rendering support
 
 ### Database Layer
 - Uses **PostgreSQL 16** with **Knex** query builder
@@ -58,10 +71,11 @@ The application loads plugins in three phases:
 3. **Routes** - API endpoints with auto-hook support
 
 ### Testing
-- Tests use Node.js built-in test runner with `tsx` for TypeScript support
+- Backend tests use Node.js built-in test runner with `tsx` for TypeScript support
 - `c8` for coverage reporting
 - Test fixtures and helper functions in `test/` directory
 - Tests automatically seed database before running
+- Frontend configured for Jest testing (though not yet implemented)
 
 ### Environment Variables
 Key configuration in `.env`:
@@ -72,8 +86,10 @@ Key configuration in `.env`:
 - `CAN_CREATE_DATABASE`, `CAN_DROP_DATABASE`, `CAN_SEED_DATABASE` for safety controls
 
 ### Development Notes
-- TypeScript compilation outputs to `dist/` directory
+- Backend TypeScript compilation outputs to `dist/` directory
 - Uses `concurrently` for dev mode with TypeScript watcher and server restart
 - Fastify autoload automatically discovers and registers plugins/routes
+- Frontend uses React Router v7 with Vite for fast development
 - Modular structure supports future extraction to microservices
 - All services are containerized and orchestrated with Docker Compose
+- Frontend Dockerfile uses multi-stage build for optimization

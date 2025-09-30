@@ -46,14 +46,14 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=${NODE_ENV}
-      - COOKIE_SECRET=${COOKIE_SECRET}
-      - COOKIE_NAME=${COOKIE_NAME}
-      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX}
     ports:
       - "3000:3000"
-    depends_on:
-      db:
-        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 volumes:
   db_data:
