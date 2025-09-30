@@ -4,30 +4,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-### Development and Testing
+### Docker Development Environment
+- `docker compose up` - Start all services (PostgreSQL, backend, frontend)
+- `docker compose down` - Stop all services
+
+### Backend Development (cd backend/)
 - `npm run dev` - Start development server with hot reload
 - `npm run test` - Run all tests with coverage
 - `npm run test:run` - Run tests without coverage
 - `npm run lint` - Check for linting errors
 - `npm run lint:fix` - Fix linting errors automatically
 
-### Build and Production
+### Backend Build and Production
 - `npm run build` - Compile TypeScript to JavaScript
 - `npm run start` - Start production server
 - `npm run standalone` - Run as standalone executable (bypasses fastify-cli)
 
-### Database Operations
-- `docker compose up` - Start PostgreSQL database
-- `npm run db:create` - Create database
+### Database Operations (cd db/)
+- `npm run db:create` - Create database (requires CAN_CREATE_DATABASE=1)
+- `npm run db:drop` - Drop database (requires CAN_DROP_DATABASE=1)
 - `npm run db:migrate` - Run database migrations
-- `npm run db:seed` - Seed database with test data
-- `npm run db:drop` - Drop database
+- `npm run db:seed` - Seed database with test data (requires CAN_SEED_DATABASE=1)
 
 ## Project Architecture
 
-This is a Fastify-based task management API built with TypeScript and PostgreSQL. The project follows a modular monolith architecture.
+This is a full-stack application with Fastify backend, React frontend, and PostgreSQL database. Each component is containerized with Docker.
 
 ### Core Structure
+- **`backend/`** - Node.js/Fastify API server with TypeScript
+- **`frontend/`** - React frontend with TypeScript (container exists but not implemented)
+- **`db/`** - Database scripts and migrations
+- **`docker-compose.yml`** - Orchestrates all services
+
+### Backend Architecture (backend/)
 - **`src/app.ts`** - Main application entry point, registers plugins and routes via fastify-autoload
 - **`src/server.ts`** - Standalone server executable for production deployment
 - **`src/plugins/external/`** - External dependencies (PostgreSQL, CORS, Swagger, rate limiting, etc.)
@@ -36,10 +45,11 @@ This is a Fastify-based task management API built with TypeScript and PostgreSQL
 - **`src/schemas/`** - TypeBox schemas for request/response validation
 
 ### Database Layer
-- Uses **PostgreSQL** with **Knex** query builder
+- Uses **PostgreSQL 16** with **Knex** query builder
 - **Postgrator** for database migrations
-- Database scripts in `scripts/` folder (create, drop, migrate, seed)
+- Database scripts in `db/scripts/` folder (create, drop, migrate, seed)
 - Database configuration loaded from environment variables
+- Safety controls: CAN_CREATE_DATABASE, CAN_DROP_DATABASE, CAN_SEED_DATABASE
 
 ### Plugin System
 The application loads plugins in three phases:
@@ -51,9 +61,11 @@ The application loads plugins in three phases:
 - Tests use Node.js built-in test runner with `tsx` for TypeScript support
 - `c8` for coverage reporting
 - Test fixtures and helper functions in `test/` directory
+- Tests automatically seed database before running
 
 ### Environment Variables
-Key configuration in `.env` (note: the README mentions MySQL but the project has been migrated to PostgreSQL):
+Key configuration in `.env`:
+- `NODE_ENV` - Always set to production (required for Docker)
 - `POSTGRES_*` variables for database connection
 - `COOKIE_SECRET` and `COOKIE_NAME` for session management
 - `RATE_LIMIT_MAX` for API rate limiting
@@ -64,3 +76,4 @@ Key configuration in `.env` (note: the README mentions MySQL but the project has
 - Uses `concurrently` for dev mode with TypeScript watcher and server restart
 - Fastify autoload automatically discovers and registers plugins/routes
 - Modular structure supports future extraction to microservices
+- All services are containerized and orchestrated with Docker Compose
