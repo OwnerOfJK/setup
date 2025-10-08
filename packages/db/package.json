@@ -1,0 +1,21 @@
+{
+  "name": "@setup/db",
+  "type": "module",
+  "packageManager": "pnpm@10.18.0",
+  "scripts": {
+    "db:create": "tsx src/scripts/create-database.ts",
+    "db:drop": "tsx src/scripts/drop-database.ts",
+    "db:migrate": "tsx src/scripts/migrate.ts",
+    "db:seed": "tsx src/scripts/seed-database.ts",
+    "db:generate": "drizzle-kit generate:pg"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.44.5",
+    "pg": "^8.16.3",
+    "@setup/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.5",
+    "@types/pg": "^8.15.5"
+  }
+}
