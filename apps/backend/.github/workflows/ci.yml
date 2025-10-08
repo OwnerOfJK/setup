@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - next
+      - "v*"
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+      - "*.example"
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "*.md"
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22, 24]
+
+    services:
+      db:
+        image: postgres:16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_ROOT_PASSWORD: root_password
+          POSTGRES_DATABASE: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd="pg_isready -U$POSTGRES_USER -d$POSTGRES_DATABASE"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          check-latest: true
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm i --ignore-scripts
+
+      - name: Build
+        run: npm run build -- --noEmit
+
+      - name: Lint Code
+        run: npm run lint
+
+      - name: Generate COOKIE Secret
+        run: |
+          COOKIE_SECRET=$(openssl rand -hex 32)
+          echo "COOKIE_SECRET=$COOKIE_SECRET" >> $GITHUB_ENV
+
+      - name: Generate dummy .env for scripts using -env-file=.env flag
+        run: touch .env
+
+      - name: Test
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 3306
+          POSTGRES_DATABASE: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          # COOKIE_SECRET is dynamically generated and loaded from the environment
+          COOKIE_NAME: 'sessid'
+          RATE_LIMIT_MAX: 4
+          CAN_SEED_DATABASE: 1
+        run: npm run db:migrate && npm run test
