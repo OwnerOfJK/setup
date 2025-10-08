@@ -1,0 +1,36 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./apps/frontend" },
+    { "path": "./apps/backend" },
+    { "path": "./packages/db" },
+    { "path": "./packages/utils" }
+  ],
+  "compilerOptions": {
+    /* Core compilation behavior */
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM"],
+
+    /* Paths and imports */
+    "baseUrl": ".",
+
+    /* Interop and module behavior */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    /* Output & build */
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": true, // the root doesn't emit; subprojects do
+    "forceConsistentCasingInFileNames": true
+  }
+}
