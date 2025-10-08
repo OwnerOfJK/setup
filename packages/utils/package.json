@@ -1,0 +1,5 @@
+{
+  "name": "@setup/utils",
+  "type": "module",
+  "packageManager": "pnpm@10.18.0"
+}
