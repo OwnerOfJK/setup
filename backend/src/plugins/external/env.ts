@@ -14,6 +14,7 @@ declare module 'fastify' {
       COOKIE_SECURED: boolean;
       RATE_LIMIT_MAX: number;
       UPLOAD_DIRNAME: string;
+      NODE_ENV: string;
     };
   }
 }

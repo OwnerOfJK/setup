@@ -1,5 +1,5 @@
 import { Client } from 'pg'
-import { scryptHash } from '../src/plugins/app/password-manager.js'
+import { scryptHash } from '../../plugins/app/password-manager.js'
 
 if (Number(process.env.CAN_SEED_DATABASE) !== 1) {
   throw new Error("You can't seed the database. Set `CAN_SEED_DATABASE=1` environment variable to allow this operation.")

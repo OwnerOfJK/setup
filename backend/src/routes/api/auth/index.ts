@@ -26,7 +26,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
     async function (request, reply) {
       const { email, password } = request.body
 
-      return fastify.knex.transaction(async (trx) => {
+      return fastify.db.transaction(async (trx) => {
         const user = await usersRepository.findByEmail(email, trx)
 
         if (user) {

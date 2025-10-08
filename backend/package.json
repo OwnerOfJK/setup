@@ -16,7 +16,11 @@
     "test:run": "glob -c \"tsx --test\" \"./test/**/*.ts\"",
     "standalone": "npm run build && node dist/server.js",
     "lint": "eslint --ignore-pattern=dist",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "db:create": "tsx src/db/scripts/create-database.ts",
+    "db:drop": "tsx src/db/scripts/drop-database.ts",
+    "db:migrate": "tsx src/db/scripts/migrate.ts",
+    "db:seed": "tsx src/db/scripts/seed-database.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^6.3.1",
@@ -37,12 +41,12 @@
     "close-with-grace": "^2.2.0",
     "concurrently": "^9.2.0",
     "csv-stringify": "^6.6.0",
+    "drizzle-kit": "^0.31.5",
+    "drizzle-orm": "^0.44.5",
     "fastify": "^5.4.0",
     "fastify-cli": "^7.4.0",
     "fastify-plugin": "^5.0.1",
-    "knex": "^3.1.0",
     "pg": "^8.16.3",
-    "postgrator": "^8.0.0",
     "sanitize-filename": "^1.6.3"
   },
   "devDependencies": {

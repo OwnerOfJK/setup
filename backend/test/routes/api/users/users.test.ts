@@ -3,14 +3,16 @@ import assert from 'node:assert'
 import { build } from '../../../helper.js'
 import { FastifyInstance } from 'fastify'
 import { scryptHash } from '../../../../src/plugins/app/password-manager.js'
+import { eq } from 'drizzle-orm'
+import { users } from '../../../src/db/schema/index.js'
 
 async function createUser (app: FastifyInstance, userData: Partial<{ username: string; email: string; password: string }>) {
-  const [id] = await app.knex('users').insert(userData)
-  return id
+  const [result] = await app.db.insert(users).values(userData).returning({ id: users.id })
+  return result.id
 }
 
 async function deleteUser (app: FastifyInstance, username: string) {
-  await app.knex('users').delete().where({ username })
+  await app.db.delete(users).where(eq(users.username, username))
 }
 
 async function updatePasswordWithLoginInjection (app: FastifyInstance, username: string, payload: { currentPassword: string; newPassword: string }) {

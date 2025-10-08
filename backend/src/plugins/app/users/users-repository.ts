@@ -1,7 +1,10 @@
 import { FastifyInstance } from 'fastify'
-import { Knex } from 'knex'
+import { eq } from 'drizzle-orm'
 import fp from 'fastify-plugin'
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import * as schema from '../../../db/schema/index.js'
 import { Auth } from '../../../schemas/auth.js'
+import { users, roles as rolesTable, userRoles } from '../../../db/schema/index.js'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -10,32 +13,45 @@ declare module 'fastify' {
 }
 
 export function createUsersRepository (fastify: FastifyInstance) {
-  const knex = fastify.knex
+  const { db } = fastify
 
   return {
-    async findByEmail (email: string, trx?: Knex) {
-      const user: Auth & { password: string } = await (trx ?? knex)('users')
-        .select('id', 'username', 'password', 'email')
-        .where({ email })
-        .first()
+    async findByEmail (email: string, trx?: NodePgDatabase<typeof schema>) {
+      const dbClient = trx ?? db
 
+      const result = await dbClient
+        .select({
+          id: users.id,
+          username: users.username,
+          password: users.password,
+          email: users.email
+        })
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1)
+
+      const user: (Omit<Auth, 'roles'> & { password: string }) | undefined = result[0]
       return user
     },
 
     async updatePassword (email: string, hashedPassword: string) {
-      return knex('users')
-        .update({ password: hashedPassword })
-        .where({ email })
+      return db
+        .update(users)
+        .set({ password: hashedPassword })
+        .where(eq(users.email, email))
     },
 
-    async findUserRolesByEmail (email: string, trx: Knex) {
-      const roles: ({ name: string })[] = await trx('roles')
-        .select('roles.name')
-        .join('user_roles', 'roles.id', '=', 'user_roles.role_id')
-        .join('users', 'user_roles.user_id', '=', 'users.id')
-        .where('users.email', email)
+    async findUserRolesByEmail (email: string, trx: NodePgDatabase<typeof schema>) {
+      const result = await trx
+        .select({
+          name: rolesTable.name
+        })
+        .from(rolesTable)
+        .innerJoin(userRoles, eq(rolesTable.id, userRoles.roleId))
+        .innerJoin(users, eq(userRoles.userId, users.id))
+        .where(eq(users.email, email))
 
-      return roles
+      return result
     }
   }
 }
@@ -47,6 +63,6 @@ export default fp(
   },
   {
     name: 'users-repository',
-    dependencies: ['knex']
+    dependencies: ['drizzle']
   }
 )
