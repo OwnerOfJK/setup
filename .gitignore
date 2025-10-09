@@ -3,3 +3,9 @@
 
 # node_modules
 **/node_modules/
+
+# dist
+**/dist
+
+# TypeScript build cache
+tsconfig.tsbuildinfo
