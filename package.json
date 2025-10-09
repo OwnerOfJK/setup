@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r build",
-    "clean": "rm -rf apps/*/dist apps/*/build apps/*/*.tsbuildinfo packages/*/*.tsbuildinfo packages/*/dist",
+    "clean": "rm -rf apps/*/node_modules apps/*/dist packages/*/node_modules packages/*/dist",
     "dev": "pnpm --filter backend dev & pnpm --filter frontend dev",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
