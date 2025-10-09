@@ -2,6 +2,10 @@
   "name": "@setup/db",
   "type": "module",
   "packageManager": "pnpm@10.18.0",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
     "db:create": "tsx src/scripts/create-database.ts",
     "db:drop": "tsx src/scripts/drop-database.ts",

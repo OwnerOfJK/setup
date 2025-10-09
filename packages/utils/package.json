@@ -1,5 +1,9 @@
 {
   "name": "@setup/utils",
   "type": "module",
-  "packageManager": "pnpm@10.18.0"
+  "packageManager": "pnpm@10.18.0",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  }
 }
