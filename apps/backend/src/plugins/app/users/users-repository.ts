@@ -2,9 +2,8 @@ import { FastifyInstance } from 'fastify'
 import { eq } from 'drizzle-orm'
 import fp from 'fastify-plugin'
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
-import { schema } from '@setup/db'
 import { Auth } from '../../../schemas/auth.js'
-import { users, roles as rolesTable, userRoles } from '@setup/db'
+import { schema, users, roles as rolesTable, userRoles } from '@setup/db'
 
 declare module 'fastify' {
   interface FastifyInstance {

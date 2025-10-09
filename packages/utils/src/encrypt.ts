@@ -26,7 +26,7 @@ export async function scryptHash (value: string): Promise<string> {
   })
 }
 
-async function compare (value: string, hash: string): Promise<boolean> {
+export async function compare (value: string, hash: string): Promise<boolean> {
   const [salt, hashed] = hash.split('.')
   if (!salt || !hashed)
     return false;

@@ -3,6 +3,8 @@ import {
   Type
 } from '@fastify/type-provider-typebox'
 import { CredentialsSchema } from '../../../schemas/auth.js'
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import { schema } from '@setup/db'
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   const { usersRepository, passwordManager } = fastify
@@ -26,7 +28,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
     async function (request, reply) {
       const { email, password } = request.body
 
-      return fastify.db.transaction(async (trx) => {
+      return fastify.db.transaction(async (trx: NodePgDatabase<typeof schema>) => {
         const user = await usersRepository.findByEmail(email, trx)
 
         if (user) {
@@ -41,7 +43,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
               id: user.id,
               email: user.email,
               username: user.username,
-              roles: roles.map((role) => role.name)
+              roles: roles.map((role: { name: string }) => role.name)
             }
 
             await request.session.save()

@@ -34,6 +34,8 @@ export const autoConfig = (fastify: FastifyInstance) => {
  * Video on the topic: Do not thrash the event loop
  * @see {@link https://www.youtube.com/watch?v=VI29mUA8n9w}
  */
-export default fp(fastifyUnderPressure, {
+export default fp(async (fastify) => {
+  await fastify.register(fastifyUnderPressure)
+}, {
   dependencies: ['drizzle']
 })

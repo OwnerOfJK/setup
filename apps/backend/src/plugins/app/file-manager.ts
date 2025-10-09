@@ -4,7 +4,7 @@ import fp from 'fastify-plugin'
 import fs from 'fs'
 import { pipeline } from 'node:stream/promises'
 import * as crypto from 'node:crypto'
-import fastifyMultipart from '../external/multipart.js'
+import fastifyMultipart, { MultipartFile } from '@fastify/multipart'
 import sanitize from 'sanitize-filename'
 import path from 'node:path'
 
@@ -22,7 +22,7 @@ function createFileManager (fastify: FastifyInstance) {
       }
     },
 
-    async upload (file: fastifyMultipart.MultipartFile, destPath: string) {
+    async upload (file: MultipartFile, destPath: string) {
       await pipeline(file.file, fs.createWriteStream(destPath))
     },
 
